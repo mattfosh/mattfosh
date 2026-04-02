@@ -390,22 +390,40 @@ Model forum data as Strapi collections, accessed through the BFF.
 
 ---
 
-## 6. Open Questions
+## 6. Open Questions (Resolved)
 
-1. **Backend team timeline**: When can the backend team start on the Community API? This affects how robust the mock layer needs to be.
-2. **Content team readiness**: Who will seed initial forum content? The spec calls for 10+ posts/week from day one.
-3. **Moderation tooling**: Will moderators use the community UI directly, or do they need a separate admin panel?
-4. **Search**: Full-text search across threads/posts is expected. In mock phase, how sophisticated does search need to be? In production, what powers it (Elasticsearch, which is already in the stack)?
-5. **SEO**: Should forum content be indexable? Venus already has a prerender service (Varnish) — does the community product need to integrate with it?
-6. **Figma designs**: Are there existing community/forum designs in the Figma design system, or does this need a design phase first?
-7. **shadcn/ui readiness**: How far along is the MUI → shadcn migration? Are there shared Tailwind configs, tokens, or conventions established yet that the community product should follow?
+1. **Backend team timeline**: Remains an open discussion. Plan is designed to work regardless — Phase 0 (prototype) and Phase 1 (BFF mock) proceed without backend. Phase 3 (swap) happens when ready.
+2. **Content team readiness**: Team exists, details unknown. Content seeding is part of prototype validation in Phase 0.
+3. **Moderation tooling**: **Resolved — needs a proper admin tool.** Given multi-brand approach, moderators need a dedicated admin panel, not just in-forum moderation. Admin panel is brand-scoped via Config Manager.
+4. **Search**: **Resolved — Elasticsearch is only used for Graylog logging, not in the app stack.** Mock phase implements a search query collector (logs what users try to search for) rather than full-text search. Production search solution TBD based on collector findings.
+5. **SEO**: **Resolved — SEO is a big deal.** Best practices from day 1: SSR, structured data (JSON-LD DiscussionForumPosting), meta tags, sitemaps, canonical URLs, breadcrumbs, Varnish prerender integration.
+6. **Figma designs**: Some design system exists, may not have community-specific designs. **Resolved by Phase 0** — the rapid prototype (Supabase + Vercel + shadcn/ui) serves as the design exploration and validation phase.
+7. **shadcn/ui readiness**: Still open — team should confirm shared Tailwind configs and conventions before Phase 2 (Venus product build).
+
+## 7. Open Questions (Remaining)
+
+1. **shadcn/ui conventions**: Are there shared Tailwind configs, tokens, or conventions established yet that the community product should follow?
+2. **Production search**: What will power full-text search in production? (Elasticsearch, Typesense, Meilisearch, or database-level search?)
+3. **Moderation roles in Keycloak**: Do community moderator/admin roles need to be created in Keycloak, or can existing admin roles be reused?
 
 ---
 
-## 7. Next Steps
+## 8. Updated Approach: Phase 0 Prototype
 
-1. **Review this document** — confirm decisions and approach
-2. **Address open questions** — especially around backend timeline, Figma designs, and shadcn/ui readiness
-3. **Write implementation plan** — detailed, phased plan for the Venus product and BFF vertical (via `/superpowers:writing-plans`)
-4. **Design phase** — if Figma designs don't exist yet, this runs in parallel with BFF contract definition
-5. **Build** — execute the plan
+### Decision 8: Prototype Before Venus Integration
+
+**Stakeholder input:**
+> "I think we should have a first phase where we put up a prototype that does not need BFF mocks. We can use vibe coding favorites like Supabase or Airtable and Vercel. Get the designs and prototype the main look and feel before going too far."
+
+**Decision**: Add a **Phase 0** using Supabase + Vercel + shadcn/ui to rapidly prototype the community UX. This validates the design, information architecture, and core flows before investing in Venus/BFF integration.
+
+**Rationale**: Catches design mistakes early. The prototype uses shadcn/ui (same target as Venus), so components and patterns transfer directly. Supabase provides instant auth + database + real-time, removing all infrastructure friction for prototyping.
+
+---
+
+## 9. Next Steps
+
+1. **Phase 0: Rapid Prototype** — Supabase + Vercel + shadcn/ui (start immediately)
+2. **Phase 1: BFF Vertical** — `@community/*` services with mock data (after Phase 0 learnings)
+3. **Phase 2: Venus Product** — AstroJS community product (after Phase 1 BFF is ready)
+4. **Phase 3: Backend Swap** — replace mock repository with real Community API (when backend team delivers)
