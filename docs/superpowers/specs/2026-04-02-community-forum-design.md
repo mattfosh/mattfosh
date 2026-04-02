@@ -203,10 +203,12 @@ src/
 │   │   ├── get-thread.ts          # @community/forum/getThread
 │   │   ├── create-thread.ts       # @community/forum/createThread
 │   │   ├── create-reply.ts        # @community/forum/createReply
+│   │   ├── search-threads.ts      # @community/forum/searchThreads
 │   │   └── index.ts
 │   ├── moderation/
 │   │   ├── flag-post.ts           # @community/moderation/flagPost
 │   │   ├── get-queue.ts           # @community/moderation/getQueue
+│   │   ├── review-flag.ts         # @community/moderation/reviewFlag
 │   │   └── index.ts
 │   ├── user/
 │   │   ├── get-profile.ts         # @community/user/getProfile
@@ -302,13 +304,13 @@ The controller, module, and Zod schema layers remain unchanged. The `safeAsync` 
 
 ## 5. Approaches Considered But Not Selected
 
-### 5.1 Headless Forum Engine + Venus Frontend (Approach B)
+### 5.1 Headless Forum Engine + Venus Frontend
 
 Use an open-source forum engine (Discourse, NodeBB, Flarum) as the backend, with Venus frontend.
 
 **Why not selected**: Creates vendor lock-in on the data model, adds translation complexity in the BFF, and doesn't map cleanly to future gamification/events plans. Extra infrastructure (PostgreSQL, Redis, Sidekiq for Discourse) adds operational burden.
 
-### 5.2 Strapi-Backed MVP (Approach C)
+### 5.2 Strapi-Backed MVP
 
 Model forum data as Strapi collections, accessed through the BFF.
 
